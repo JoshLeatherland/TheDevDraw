@@ -1,0 +1,25 @@
+{
+  "name": "thedevdraw",
+  "private": true,
+  "workspaces": [
+    "./packages/*"
+  ],
+  "version": "1.0.0",
+  "description": "It's the man drawer, but for developers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoshLeatherland/TheDevDraw.git"
+  },
+  "keywords": [],
+  "author": "JoshLeatherland",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/JoshLeatherland/TheDevDraw/issues"
+  },
+  "homepage": "https://github.com/JoshLeatherland/TheDevDraw#readme"
+}

@@ -1,0 +1,28 @@
+version: 1
+applications:
+  - frontend:
+      phases:
+        preBuild:
+          commands:
+            - nvm install 20
+            - nvm use 20
+            - node -v
+            - npm -v
+            - cd ./packages/tdd-components
+            - npm install
+            - npm run build
+            - cd ../tdd-tools
+            - npm install
+            - npm run build
+            - cd ../tdd-app
+            - npm install
+            - npm run build
+        build:
+          commands: []
+      artifacts:
+        baseDirectory: ./packages/tdd-app/dist
+        files:
+          - "**/*"
+      cache:
+        paths:
+          - node_modules/**/*
