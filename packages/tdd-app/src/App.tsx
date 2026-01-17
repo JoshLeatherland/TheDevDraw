@@ -1,6 +1,6 @@
 import { AppTheme } from "tdd-components";
 import { alpha, Box, CssBaseline } from "@mui/material";
-import { Footer, HeroSection } from "./components";
+import { Footer, HeroSection, PrivacyPolicy } from "./components";
 import { Route, Routes } from "react-router-dom";
 import {
   Base64Tool,
@@ -48,6 +48,8 @@ function App() {
           >
             <Routes>
               <Route path="/" element={<HeroSection />} />
+
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
               <Route path="/tools">
                 <Route

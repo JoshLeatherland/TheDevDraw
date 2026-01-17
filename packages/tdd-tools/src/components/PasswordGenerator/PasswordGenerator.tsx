@@ -45,7 +45,7 @@ function PasswordGenerator() {
   return (
     <Box
       sx={{
-        height: "100vh",
+        height: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
