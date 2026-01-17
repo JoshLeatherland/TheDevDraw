@@ -15,7 +15,7 @@ function FooterNote() {
   );
 }
 
-export default function Footer() {
+function Footer() {
   return (
     <Container
       sx={{
@@ -76,3 +76,4 @@ export default function Footer() {
     </Container>
   );
 }
+export default Footer;
