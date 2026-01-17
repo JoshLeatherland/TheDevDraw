@@ -5,11 +5,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
+import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { ColorModeIconDropdown, LanguageIconDropdown } from "../../components";
+import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
+import { ColorModeIconDropdown } from "../../components";
 import lightLogo from "../../assets/logo-light.png";
 import darkLogo from "../../assets/logo-dark.png";
 import { useState } from "react";
@@ -34,18 +36,33 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 function AppAppBar() {
   const [open, setOpen] = useState<boolean>(false);
+  const [toolsAnchorEl, setToolsAnchorEl] = useState<null | HTMLElement>(null);
+
+  const { mode, systemMode } = useColorScheme();
+  const navigate = useNavigate();
+
+  const resolvedMode = (systemMode || mode) as "light" | "dark";
+  const logo = resolvedMode === "dark" ? darkLogo : lightLogo;
+
+  const toolsOpen = Boolean(toolsAnchorEl);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
 
-  const { mode, systemMode, setMode } = useColorScheme();
+  const handleNavigate = (url: string) => {
+    navigate(url);
+    setOpen(false);
+    setToolsAnchorEl(null);
+  };
 
-  const navigate = useNavigate();
+  const handleToolsClick = (event: React.MouseEvent<HTMLElement>) => {
+    setToolsAnchorEl(event.currentTarget);
+  };
 
-  const resolvedMode = (systemMode || mode) as "light" | "dark";
-
-  const logo = resolvedMode === "dark" ? darkLogo : lightLogo;
+  const handleToolsClose = () => {
+    setToolsAnchorEl(null);
+  };
 
   return (
     <AppBar
@@ -64,20 +81,68 @@ function AppAppBar() {
             sx={{ flexGrow: 1, display: "flex", alignItems: "center", px: 0 }}
           >
             <Box component="img" src={logo} alt="Logo" sx={{ mr: 2 }} />
+
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <Button
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => navigate("/")}
+                onClick={() => handleNavigate("/")}
               >
                 Home
               </Button>
-              {/* <Button variant="text" color="info" size="small">
+
+              <Button
+                variant="text"
+                color="info"
+                size="small"
+                onClick={handleToolsClick}
+                endIcon={<ArrowDropDownRoundedIcon />}
+                aria-controls={toolsOpen ? "tools-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={toolsOpen ? "true" : undefined}
+              >
                 Tools
-              </Button> */}
+              </Button>
+
+              <Menu
+                anchorEl={toolsAnchorEl}
+                id="tools-menu"
+                open={toolsOpen}
+                onClose={handleToolsClose}
+                slotProps={{
+                  paper: {
+                    variant: "outlined",
+                    elevation: 0,
+                    sx: {
+                      my: "4px",
+                      minWidth: 220,
+                    },
+                  },
+                }}
+                transformOrigin={{ horizontal: "left", vertical: "top" }}
+                anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
+              >
+                <MenuItem
+                  onClick={() => handleNavigate("/tools/password-generator")}
+                >
+                  Password Generator
+                </MenuItem>
+                <MenuItem
+                  onClick={() => handleNavigate("/tools/qr-code-generator")}
+                >
+                  QR Code Generator
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate("/tools/jwt")}>
+                  JWT Encode / Decode
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate("/tools/base64")}>
+                  Base64 Encode / Decode
+                </MenuItem>
+              </Menu>
             </Box>
           </Box>
+
           <Box
             sx={{
               display: { xs: "none", md: "flex" },
@@ -91,13 +156,13 @@ function AppAppBar() {
               href="https://github.com/JoshLeatherland/TheDevDraw"
               target="_blank"
               aria-label="GitHub"
-              sx={{ alignSelf: "center" }}
             >
               <GitHubIcon />
             </IconButton>
-            {/* <LanguageIconDropdown /> - TODO */}
+
             <ColorModeIconDropdown />
           </Box>
+
           <Box sx={{ display: { xs: "flex", md: "none" }, gap: 1 }}>
             <IconButton
               color="inherit"
@@ -105,39 +170,56 @@ function AppAppBar() {
               href="https://github.com/JoshLeatherland/TheDevDraw"
               target="_blank"
               aria-label="GitHub"
-              sx={{ alignSelf: "center" }}
             >
               <GitHubIcon />
             </IconButton>
-            {/* <LanguageIconDropdown /> - TODO */}
+
             <ColorModeIconDropdown size="medium" />
+
             <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
               <MenuIcon />
             </IconButton>
+
             <Drawer
               anchor="top"
               open={open}
               onClose={toggleDrawer(false)}
               PaperProps={{
                 sx: {
-                  top: "var(--template-frame-height, 0px)",
+                  height: "100vh",
                 },
               }}
             >
-              <Box sx={{ p: 2, backgroundColor: "background.default" }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
-                >
+              <Box
+                sx={{
+                  p: 2,
+                  backgroundColor: "background.default",
+                  height: "100%",
+                }}
+              >
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                   <IconButton onClick={toggleDrawer(false)}>
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
 
-                <MenuItem onClick={() => navigate("/")}>Home</MenuItem>
-                {/* <MenuItem>Tools</MenuItem> */}
+                <MenuItem onClick={() => handleNavigate("/")}>Home</MenuItem>
+                <MenuItem
+                  onClick={() => handleNavigate("/tools/password-generator")}
+                >
+                  Password Generator
+                </MenuItem>
+                <MenuItem
+                  onClick={() => handleNavigate("/tools/qr-code-generator")}
+                >
+                  QR Code Generator
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate("/tools/jwt")}>
+                  JWT Encode / Decode
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate("/tools/base64")}>
+                  Base64 Encode / Decode
+                </MenuItem>
               </Box>
             </Drawer>
           </Box>

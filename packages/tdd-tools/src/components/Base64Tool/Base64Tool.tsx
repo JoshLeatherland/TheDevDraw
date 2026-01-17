@@ -53,8 +53,8 @@ function Base64Tool() {
         alignItems: "center",
       }}
     >
-      <Container maxWidth="md">
-        <Card sx={{ borderRadius: 3 }}>
+      <Container maxWidth="lg">
+        <Card sx={{ borderRadius: 2 }}>
           <CardContent>
             <Stack spacing={3}>
               <Typography variant="h5" fontWeight={600}>
@@ -123,7 +123,6 @@ function Base64Tool() {
                       variant="contained"
                       startIcon={<ContentCopyIcon />}
                       onClick={() => copy(output)}
-                      disabled={!output}
                     >
                       Copy Output
                     </Button>

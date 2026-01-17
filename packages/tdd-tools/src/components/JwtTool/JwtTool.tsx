@@ -97,7 +97,7 @@ function JwtTool() {
       }}
     >
       <Container maxWidth="lg">
-        <Card sx={{ borderRadius: 3 }}>
+        <Card sx={{ borderRadius: 2 }}>
           <CardContent>
             <Stack spacing={3}>
               <Typography variant="h5" fontWeight={600}>
