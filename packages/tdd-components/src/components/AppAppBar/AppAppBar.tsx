@@ -80,7 +80,13 @@ function AppAppBar() {
           <Box
             sx={{ flexGrow: 1, display: "flex", alignItems: "center", px: 0 }}
           >
-            <Box component="img" src={logo} alt="Logo" sx={{ mr: 2 }} />
+            <Box
+              component="img"
+              src={logo}
+              alt="Logo"
+              sx={{ mr: 2, cursor: "pointer" }}
+              onClick={() => window.location.reload()}
+            />
 
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <Button
