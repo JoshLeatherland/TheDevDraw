@@ -86,7 +86,7 @@ function HeroSection() {
             tools you always need.
           </Typography>
           <Stack
-            spacing={1.5}
+            spacing={2.5}
             alignItems="center"
             sx={{ width: { xs: "100%", sm: "350px" } }}
           >
