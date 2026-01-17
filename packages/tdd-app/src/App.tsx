@@ -1,35 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { AppTheme } from "tdd-components";
+import { alpha, Box, CssBaseline } from "@mui/material";
+import { Footer, HeroSection } from "./components";
+import { Route, Routes } from "react-router-dom";
+import { PasswordGenerator } from "tdd-tools";
+import { AppAppBar } from "tdd-components";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <AppTheme>
+      <CssBaseline enableColorScheme />
+
+      <Box sx={{ display: "flex" }}>
+        <AppAppBar />
+
+        <Box
+          component="main"
+          sx={(theme) => ({
+            flexGrow: 1,
+            minHeight: "100vh",
+            backgroundColor: theme.vars
+              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
+              : alpha(theme.palette.background.default, 1),
+            overflow: "auto",
+          })}
+        >
+          <Box
+            sx={(theme) => ({
+              height: "100%",
+              margin: "0 auto",
+              borderRadius: 3,
+              p: 0,
+              width: "100%",
+              backgroundRepeat: "no-repeat",
+
+              backgroundImage:
+                "radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 90%), transparent)",
+              ...theme.applyStyles("dark", {
+                backgroundImage:
+                  "radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 16%), transparent)",
+              }),
+            })}
+          >
+            <Routes>
+              <Route path="/" element={<HeroSection />} />
+
+              <Route path="/tools">
+                <Route
+                  path="password-generator"
+                  element={<PasswordGenerator />}
+                />
+              </Route>
+            </Routes>
+
+            <Footer />
+          </Box>
+        </Box>
+      </Box>
+    </AppTheme>
+  );
 }
 
-export default App
+export default App;
