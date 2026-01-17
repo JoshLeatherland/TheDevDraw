@@ -2,7 +2,12 @@ import { AppTheme } from "tdd-components";
 import { alpha, Box, CssBaseline } from "@mui/material";
 import { Footer, HeroSection } from "./components";
 import { Route, Routes } from "react-router-dom";
-import { PasswordGenerator } from "tdd-tools";
+import {
+  Base64Tool,
+  JwtTool,
+  PasswordGenerator,
+  QRCodeGenerator,
+} from "tdd-tools";
 import { AppAppBar } from "tdd-components";
 
 function App() {
@@ -49,6 +54,12 @@ function App() {
                   path="password-generator"
                   element={<PasswordGenerator />}
                 />
+
+                <Route path="qr-code-generator" element={<QRCodeGenerator />} />
+
+                <Route path="jwt" element={<JwtTool />} />
+
+                <Route path="base64" element={<Base64Tool />} />
               </Route>
             </Routes>
 

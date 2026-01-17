@@ -41,7 +41,13 @@ function CustomizePassword({
             <TextField
               type="number"
               value={length}
-              onChange={(e) => setLength(Math.max(1, Number(e.target.value)))}
+              onChange={(e) => {
+                const val = Math.max(1, Number(e.target.value));
+
+                if (val > 30) return;
+
+                setLength(val);
+              }}
               sx={{ width: "80px" }}
             />
           </Grid>

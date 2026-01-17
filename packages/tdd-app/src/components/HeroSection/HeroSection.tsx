@@ -88,7 +88,7 @@ function HeroSection() {
           <Stack
             spacing={1.5}
             alignItems="center"
-            sx={{ pt: 2, width: { xs: "100%", sm: "350px" } }}
+            sx={{ width: { xs: "100%", sm: "350px" } }}
           >
             <Typography
               variant="caption"

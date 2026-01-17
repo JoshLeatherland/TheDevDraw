@@ -44,7 +44,7 @@ function PasswordGenerator() {
         alignItems: "center",
       }}
     >
-      <Container maxWidth="sm">
+      <Container maxWidth="md">
         <Box
           display="flex"
           justifyContent="space-between"
