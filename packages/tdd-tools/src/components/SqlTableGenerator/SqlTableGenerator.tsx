@@ -46,7 +46,16 @@ const sqlTypes = [
 function SqlTableGenerator() {
   const [tableName, setTableName] = useState("");
   const [schema, setSchema] = useState("dbo");
-  const [columns, setColumns] = useState<Column[]>([]);
+  const [columns, setColumns] = useState<Column[]>([
+    {
+      name: "",
+      type: "VARCHAR(50)",
+      nullable: false,
+      default: "",
+      fkTable: "",
+      fkColumn: "",
+    },
+  ]);
   const [sql, setSql] = useState("");
 
   useEffect(() => {
@@ -59,7 +68,7 @@ function SqlTableGenerator() {
       {
         name: "",
         type: "VARCHAR(50)",
-        nullable: true,
+        nullable: false,
         default: "",
         fkTable: "",
         fkColumn: "",
