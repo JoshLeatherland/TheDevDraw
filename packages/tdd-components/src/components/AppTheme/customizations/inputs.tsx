@@ -7,6 +7,7 @@ import CheckBoxOutlineBlankRoundedIcon from "@mui/icons-material/CheckBoxOutline
 import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 import { gray, brand } from "../themePrimitives";
+import { Opacity } from "@mui/icons-material";
 
 /* eslint-disable import/prefer-default-export */
 export const inputsCustomizations: Components<Theme> = {
@@ -32,6 +33,12 @@ export const inputsCustomizations: Components<Theme> = {
         boxShadow: "none",
         borderRadius: (theme.vars || theme).shape.borderRadius,
         textTransform: "none",
+
+        "&.Mui-disabled": {
+          opacity: "0.5",
+          color: theme.palette.text.secondary,
+        },
+
         variants: [
           {
             props: {

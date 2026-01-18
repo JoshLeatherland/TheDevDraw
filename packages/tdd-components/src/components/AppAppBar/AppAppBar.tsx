@@ -145,6 +145,9 @@ function AppAppBar() {
                 <MenuItem onClick={() => handleNavigate("/tools/base64")}>
                   Base64 Encode / Decode
                 </MenuItem>
+                <MenuItem onClick={() => handleNavigate("/tools/sql-table")}>
+                  SQL Table Generator
+                </MenuItem>
               </Menu>
             </Box>
           </Box>
@@ -225,6 +228,9 @@ function AppAppBar() {
                 </MenuItem>
                 <MenuItem onClick={() => handleNavigate("/tools/base64")}>
                   Base64 Encode / Decode
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate("/tools/sql-table")}>
+                  SQL Table Generator
                 </MenuItem>
               </Box>
             </Drawer>

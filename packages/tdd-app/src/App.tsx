@@ -7,6 +7,7 @@ import {
   JwtTool,
   PasswordGenerator,
   QRCodeGenerator,
+  SqlTableGenerator,
 } from "tdd-tools";
 import { AppAppBar } from "tdd-components";
 
@@ -62,6 +63,8 @@ function App() {
                 <Route path="jwt" element={<JwtTool />} />
 
                 <Route path="base64" element={<Base64Tool />} />
+
+                <Route path="sql-table" element={<SqlTableGenerator />} />
               </Route>
             </Routes>
 
