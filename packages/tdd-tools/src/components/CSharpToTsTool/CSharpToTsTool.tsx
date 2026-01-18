@@ -13,7 +13,7 @@ import {
   Alert,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { generateTsInterfaces } from "../../utils/csharpToTsGenerator";
+import { generateTsInterfaces } from "../../utils";
 
 function CSharpToTsTool() {
   const [csharp, setCsharp] = useState<string>("");

@@ -1,5 +1,9 @@
-import { parseCSharpModels, parseCSharpEnums } from "./csharpParser";
-import { mapCSharpTypeToTs, toCamelCase } from "./csharpTypeMapper";
+import {
+  mapCSharpTypeToTs,
+  toCamelCase,
+  parseCSharpModels,
+  parseCSharpEnums,
+} from "../utils";
 
 export function generateTsInterfaces(csharpCode: string): string {
   if (!csharpCode.trim()) {
