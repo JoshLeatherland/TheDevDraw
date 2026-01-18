@@ -4,3 +4,4 @@ export { default as QRCodeGenerator } from "./QRCodeGenerator";
 export { default as JwtTool } from "./JwtTool";
 export { default as Base64Tool } from "./Base64Tool";
 export { default as SqlTableGenerator } from "./SqlTableGenerator";
+export { default as CSharpToTsTool } from "./CSharpToTsTool";

@@ -4,6 +4,7 @@ import { Footer, HeroSection, PrivacyPolicy } from "./components";
 import { Route, Routes } from "react-router-dom";
 import {
   Base64Tool,
+  CSharpToTsTool,
   JwtTool,
   PasswordGenerator,
   QRCodeGenerator,
@@ -65,6 +66,8 @@ function App() {
                 <Route path="base64" element={<Base64Tool />} />
 
                 <Route path="sql-table" element={<SqlTableGenerator />} />
+
+                <Route path="csharp-to-ts" element={<CSharpToTsTool />} />
               </Route>
             </Routes>
 

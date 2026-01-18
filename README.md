@@ -53,6 +53,7 @@ Current tools available:
 - Base64 encode and decode
 - JWT encode (not signed) and decode
 - Microsoft SQL Table Generator
+- C# Model → TypeScript Interface
 
 More tools will be added over time.
 
