@@ -148,6 +148,9 @@ function AppAppBar() {
                 <MenuItem onClick={() => handleNavigate("/tools/sql-table")}>
                   SQL Table Generator
                 </MenuItem>
+                <MenuItem onClick={() => handleNavigate("/tools/csharp-to-ts")}>
+                  C# Model To TS Interface
+                </MenuItem>
               </Menu>
             </Box>
           </Box>
@@ -231,6 +234,9 @@ function AppAppBar() {
                 </MenuItem>
                 <MenuItem onClick={() => handleNavigate("/tools/sql-table")}>
                   SQL Table Generator
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate("/tools/csharp-to-ts")}>
+                  C# Model To TS Interface
                 </MenuItem>
               </Box>
             </Drawer>

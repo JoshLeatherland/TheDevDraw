@@ -51,6 +51,17 @@ const tools = [
     description: "Convert text and files to Base64 and back.",
     path: "/tools/base64",
   },
+  {
+    title: "SQL Table Generator",
+    description:
+      "Generate production-ready Microsoft SQL CREATE TABLE scripts.",
+    path: "/tools/sql-table",
+  },
+  {
+    title: "C# Model → TypeScript Interface",
+    description: "Convert C# DTOs and models into TypeScript interfaces.",
+    path: "/tools/csharp-to-ts",
+  },
 ];
 
 function ToolsSection() {
