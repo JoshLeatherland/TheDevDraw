@@ -52,6 +52,7 @@ Current tools available:
 - QR code generator
 - Base64 encode and decode
 - JWT encode (not signed) and decode
+- Microsoft SQL Table Generator
 
 More tools will be added over time.
 

@@ -32,6 +32,12 @@ export const inputsCustomizations: Components<Theme> = {
         boxShadow: "none",
         borderRadius: (theme.vars || theme).shape.borderRadius,
         textTransform: "none",
+
+        "&.Mui-disabled": {
+          opacity: "0.5",
+          color: theme.palette.text.secondary,
+        },
+
         variants: [
           {
             props: {
