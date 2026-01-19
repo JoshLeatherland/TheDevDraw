@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/TheDevDraw/sw.js', { scope: '/TheDevDraw/' })})}
