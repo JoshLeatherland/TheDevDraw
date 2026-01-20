@@ -151,6 +151,16 @@ function AppAppBar() {
                 <MenuItem onClick={() => handleNavigate("/tools/csharp-to-ts")}>
                   C# Model To TS Interface
                 </MenuItem>
+                <MenuItem
+                  onClick={() => handleNavigate("/tools/json-formatter")}
+                >
+                  JSON Formatter
+                </MenuItem>
+                <MenuItem
+                  onClick={() => handleNavigate("/tools/sql-formatter")}
+                >
+                  SQL Formatter
+                </MenuItem>
               </Menu>
             </Box>
           </Box>
@@ -237,6 +247,16 @@ function AppAppBar() {
                 </MenuItem>
                 <MenuItem onClick={() => handleNavigate("/tools/csharp-to-ts")}>
                   C# Model To TS Interface
+                </MenuItem>
+                <MenuItem
+                  onClick={() => handleNavigate("/tools/json-formatter")}
+                >
+                  JSON Formatter
+                </MenuItem>
+                <MenuItem
+                  onClick={() => handleNavigate("/tools/sql-formatter")}
+                >
+                  SQL Formatter
                 </MenuItem>
               </Box>
             </Drawer>

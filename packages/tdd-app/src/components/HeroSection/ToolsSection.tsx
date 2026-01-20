@@ -62,6 +62,16 @@ const tools = [
     description: "Convert C# DTOs and models into TypeScript interfaces.",
     path: "/tools/csharp-to-ts",
   },
+  {
+    title: "JSON Formatter",
+    description: "Format, validate and minify JSON.",
+    path: "/tools/json-formatter",
+  },
+  {
+    title: "SQL Formatter",
+    description: "Format and minify T-SQL queries for readability.",
+    path: "/tools/sql-formatter",
+  },
 ];
 
 function ToolsSection() {

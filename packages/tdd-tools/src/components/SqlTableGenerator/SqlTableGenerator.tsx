@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { CodePreview } from "tdd-components";
 
 type Column = {
   name: string;
@@ -83,7 +84,7 @@ function SqlTableGenerator() {
   const updateColumn = <K extends keyof Column>(
     index: number,
     key: K,
-    value: Column[K]
+    value: Column[K],
   ) => {
     setColumns((prev) => {
       const next = [...prev];
@@ -134,7 +135,7 @@ function SqlTableGenerator() {
         if (col.default) {
           const formatted = formatDefaultValue(col.type, col.default);
           parts.push(
-            `CONSTRAINT DF_${tableName}_${col.name} DEFAULT ${formatted}`
+            `CONSTRAINT DF_${tableName}_${col.name} DEFAULT ${formatted}`,
           );
         }
 
@@ -146,7 +147,7 @@ function SqlTableGenerator() {
       .filter((c) => c.fkTable && c.fkColumn)
       .map(
         (c) =>
-          `CONSTRAINT FK_${tableName}_${c.fkTable}_${c.name} FOREIGN KEY ([${c.name}]) REFERENCES [dbo].[${c.fkTable}]([${c.fkColumn}])`
+          `CONSTRAINT FK_${tableName}_${c.fkTable}_${c.name} FOREIGN KEY ([${c.name}]) REFERENCES [dbo].[${c.fkTable}]([${c.fkColumn}])`,
       );
 
     const createSql = `
@@ -162,8 +163,8 @@ BEGIN
     (
         ${colDefs.join(",\n        ")},
         ${pkConstraint}${
-      fkDefs.length ? ",\n        " + fkDefs.join(",\n        ") : ""
-    }
+          fkDefs.length ? ",\n        " + fkDefs.join(",\n        ") : ""
+        }
     );
 END
 `.trim();
@@ -180,7 +181,7 @@ END
       (c) =>
         c.name.trim().length > 0 &&
         c.type.trim().length > 0 &&
-        (!c.fkTable || c.fkColumn?.trim().length)
+        (!c.fkTable || c.fkColumn?.trim().length),
     ) &&
     new Set(columns.map((c) => c.name.trim().toLowerCase())).size ===
       columns.length;
@@ -334,24 +335,12 @@ END
 
               {sql && (
                 <>
-                  <TextField
-                    variant="filled"
-                    label="Generated SQL"
-                    multiline
-                    minRows={10}
-                    maxRows={20}
-                    fullWidth
+                  <CodePreview
+                    title="Output"
                     value={sql}
-                    InputProps={{ readOnly: true }}
+                    language="sql"
+                    height={400}
                   />
-
-                  <Button
-                    variant="outlined"
-                    startIcon={<ContentCopyIcon />}
-                    onClick={() => copy(sql)}
-                  >
-                    Copy Output
-                  </Button>
                 </>
               )}
             </Stack>
