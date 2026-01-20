@@ -5,9 +5,11 @@ import { Route, Routes } from "react-router-dom";
 import {
   Base64Tool,
   CSharpToTsTool,
+  JsonFormatterTool,
   JwtTool,
   PasswordGenerator,
   QRCodeGenerator,
+  SqlFormatterTool,
   SqlTableGenerator,
 } from "tdd-tools";
 import { AppAppBar } from "tdd-components";
@@ -68,6 +70,10 @@ function App() {
                 <Route path="sql-table" element={<SqlTableGenerator />} />
 
                 <Route path="csharp-to-ts" element={<CSharpToTsTool />} />
+
+                <Route path="json-formatter" element={<JsonFormatterTool />} />
+
+                <Route path="sql-formatter" element={<SqlFormatterTool />} />
               </Route>
             </Routes>
 

@@ -5,3 +5,5 @@ export { default as JwtTool } from "./JwtTool";
 export { default as Base64Tool } from "./Base64Tool";
 export { default as SqlTableGenerator } from "./SqlTableGenerator";
 export { default as CSharpToTsTool } from "./CSharpToTsTool";
+export { default as JsonFormatterTool } from "./JsonFormatterTool";
+export { default as SqlFormatterTool } from "./SqlFormatterTool";

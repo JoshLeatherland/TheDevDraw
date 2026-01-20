@@ -54,6 +54,8 @@ Current tools available:
 - JWT encode (not signed) and decode
 - Microsoft SQL Table Generator
 - C# Model → TypeScript Interface
+- JSON Formatter
+- SQL Formatter
 
 More tools will be added over time.
 

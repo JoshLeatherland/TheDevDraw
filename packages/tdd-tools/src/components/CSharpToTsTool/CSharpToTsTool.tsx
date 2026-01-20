@@ -6,7 +6,6 @@ import {
   CardContent,
   Stack,
   Grid,
-  TextField,
   Typography,
   Button,
   IconButton,
@@ -14,6 +13,7 @@ import {
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { generateTsInterfaces } from "../../utils";
+import { CodePreview } from "tdd-components";
 
 function CSharpToTsTool() {
   const [csharp, setCsharp] = useState<string>("");
@@ -57,29 +57,32 @@ function CSharpToTsTool() {
 
               <Grid container spacing={2}>
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <TextField
-                    label="C# Models"
-                    multiline
-                    minRows={14}
-                    maxRows={25}
-                    fullWidth
-                    variant="filled"
-                    placeholder="Paste your C# models here..."
-                    value={csharp}
-                    onChange={(e) => setCsharp(e.target.value)}
-                  />
+                  <Card>
+                    <CardContent>
+                      <CodePreview
+                        title="C# Models"
+                        value={csharp}
+                        readOnly={false}
+                        onChange={(val) => setCsharp(val)}
+                        language="csharp"
+                        height={400}
+                      />
+                    </CardContent>
+                  </Card>
                 </Grid>
 
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <TextField
-                    label="TypeScript Interfaces"
-                    multiline
-                    minRows={14}
-                    fullWidth
-                    variant="filled"
-                    value={output}
-                    InputProps={{ readOnly: true }}
-                  />
+                  <Card>
+                    <CardContent>
+                      <CodePreview
+                        title="TypeScript Interfaces"
+                        value={output}
+                        readOnly
+                        language="typescript"
+                        height={400}
+                      />
+                    </CardContent>
+                  </Card>
                 </Grid>
               </Grid>
 
