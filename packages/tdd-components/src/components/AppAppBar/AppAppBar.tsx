@@ -161,6 +161,14 @@ function AppAppBar() {
                 >
                   SQL Formatter
                 </MenuItem>
+                <MenuItem
+                  onClick={() => handleNavigate("/tools/json-to-csharp")}
+                >
+                  JSON To C# Model
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate("/tools/diff-checker")}>
+                  Diff Checker
+                </MenuItem>
               </Menu>
             </Box>
           </Box>
@@ -257,6 +265,14 @@ function AppAppBar() {
                   onClick={() => handleNavigate("/tools/sql-formatter")}
                 >
                   SQL Formatter
+                </MenuItem>
+                <MenuItem
+                  onClick={() => handleNavigate("/tools/json-to-csharp")}
+                >
+                  JSON To C# Model
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate("/tools/diff-checker")}>
+                  Diff Checker
                 </MenuItem>
               </Box>
             </Drawer>

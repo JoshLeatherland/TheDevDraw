@@ -5,7 +5,9 @@ import { Route, Routes } from "react-router-dom";
 import {
   Base64Tool,
   CSharpToTsTool,
+  DiffCheckerTool,
   JsonFormatterTool,
+  JsonToCSharpTool,
   JwtTool,
   PasswordGenerator,
   QRCodeGenerator,
@@ -74,6 +76,13 @@ function App() {
                 <Route path="json-formatter" element={<JsonFormatterTool />} />
 
                 <Route path="sql-formatter" element={<SqlFormatterTool />} />
+
+                <Route path="json-to-csharp" element={<JsonToCSharpTool />} />
+
+                <Route
+                  path="/tools/diff-checker"
+                  element={<DiffCheckerTool />}
+                />
               </Route>
             </Routes>
 

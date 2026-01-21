@@ -7,3 +7,5 @@ export { default as SqlTableGenerator } from "./SqlTableGenerator";
 export { default as CSharpToTsTool } from "./CSharpToTsTool";
 export { default as JsonFormatterTool } from "./JsonFormatterTool";
 export { default as SqlFormatterTool } from "./SqlFormatterTool";
+export { default as JsonToCSharpTool } from "./JsonToCSharpTool";
+export { default as DiffCheckerTool } from "./DiffCheckerTool";

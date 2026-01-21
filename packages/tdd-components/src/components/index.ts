@@ -5,3 +5,4 @@ export { default as ColorModeIconDropdown } from "./ColorModeIconDropdown";
 export { default as LanguageIconDropdown } from "./LanguageIconDropdown";
 export { default as AppAppBar } from "./AppAppBar";
 export { default as CodePreview } from "./CodePreview";
+export { default as DiffPreview } from "./DiffPreview";
