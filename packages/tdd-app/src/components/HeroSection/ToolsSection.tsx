@@ -72,6 +72,17 @@ const tools = [
     description: "Format and minify T-SQL queries for readability.",
     path: "/tools/sql-formatter",
   },
+  {
+    title: "JSON to C#",
+    description: "Convert JSON into strongly typed C# models instantly.",
+    path: "/tools/json-to-csharp",
+  },
+  {
+    title: "Diff Checker",
+    description:
+      "Compare two blocks of text and see the differences instantly.",
+    path: "/tools/diff-checker",
+  },
 ];
 
 function ToolsSection() {

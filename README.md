@@ -56,6 +56,8 @@ Current tools available:
 - C# Model → TypeScript Interface
 - JSON Formatter
 - SQL Formatter
+- JSON → C# Models
+- Diff Checker
 
 More tools will be added over time.
 
