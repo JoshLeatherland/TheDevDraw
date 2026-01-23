@@ -9,3 +9,5 @@ export { default as JsonFormatterTool } from "./JsonFormatterTool";
 export { default as SqlFormatterTool } from "./SqlFormatterTool";
 export { default as JsonToCSharpTool } from "./JsonToCSharpTool";
 export { default as DiffCheckerTool } from "./DiffCheckerTool";
+export { default as FaviconGeneratorTool } from "./FaviconGeneratorTool";
+export { default as UuidTool } from "./UuidTool";

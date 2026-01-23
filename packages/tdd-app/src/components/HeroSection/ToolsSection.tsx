@@ -83,6 +83,17 @@ const tools = [
       "Compare two blocks of text and see the differences instantly.",
     path: "/tools/diff-checker",
   },
+  {
+    title: "Favicon Generator",
+    description: "Generate favicon.ico and app icons from PNG or JPG images.",
+    path: "/tools/favicon-generator",
+  },
+  {
+    title: "UUID Generator & Validator",
+    description:
+      "Generate UUID v4/v7, validate existing UUIDs, and detect versions.",
+    path: "/tools/uuid",
+  },
 ];
 
 function ToolsSection() {

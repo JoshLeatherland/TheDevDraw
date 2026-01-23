@@ -6,6 +6,7 @@ import {
   Base64Tool,
   CSharpToTsTool,
   DiffCheckerTool,
+  FaviconGeneratorTool,
   JsonFormatterTool,
   JsonToCSharpTool,
   JwtTool,
@@ -13,6 +14,7 @@ import {
   QRCodeGenerator,
   SqlFormatterTool,
   SqlTableGenerator,
+  UuidTool,
 } from "tdd-tools";
 import { AppAppBar } from "tdd-components";
 
@@ -83,6 +85,13 @@ function App() {
                   path="/tools/diff-checker"
                   element={<DiffCheckerTool />}
                 />
+
+                <Route
+                  path="/tools/favicon-generator"
+                  element={<FaviconGeneratorTool />}
+                />
+
+                <Route path="/tools/uuid" element={<UuidTool />} />
               </Route>
             </Routes>
 
