@@ -58,6 +58,8 @@ Current tools available:
 - SQL Formatter
 - JSON → C# Models
 - Diff Checker
+- Favicon Generator
+- UUID Generator & Validator
 
 More tools will be added over time.
 
