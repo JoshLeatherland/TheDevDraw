@@ -282,6 +282,14 @@ function AppAppBar() {
                 <MenuItem onClick={() => handleNavigate("/tools/diff-checker")}>
                   Diff Checker
                 </MenuItem>
+                <MenuItem
+                  onClick={() => handleNavigate("/tools/favicon-generator")}
+                >
+                  Favicon Generator
+                </MenuItem>
+                <MenuItem onClick={() => handleNavigate("/tools/uuid")}>
+                  UUID Generator & Validator
+                </MenuItem>
               </Box>
             </Drawer>
           </Box>
