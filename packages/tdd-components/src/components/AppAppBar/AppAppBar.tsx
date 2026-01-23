@@ -17,6 +17,7 @@ import darkLogo from "../../assets/logo-dark.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import { Stack, Chip } from "@mui/material";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -33,6 +34,75 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   boxShadow: (theme.vars || theme).shadows[1],
   padding: "8px 12px",
 }));
+
+type Tool = {
+  title: string;
+  path: string;
+  category: string;
+  isNew?: boolean;
+};
+
+const tools: Tool[] = [
+  {
+    title: "Password Generator",
+    path: "/tools/password-generator",
+    category: "Security",
+  },
+  {
+    title: "JWT Encode / Decode",
+    path: "/tools/jwt",
+    category: "Security",
+  },
+  {
+    title: "JSON Formatter",
+    path: "/tools/json-formatter",
+    category: "Dev",
+  },
+  {
+    title: "SQL Formatter",
+    path: "/tools/sql-formatter",
+    category: "Dev",
+  },
+  {
+    title: "Diff Checker",
+    path: "/tools/diff-checker",
+    category: "Dev",
+    isNew: true,
+  },
+  {
+    title: "UUID Generator & Validator",
+    path: "/tools/uuid",
+    category: "Dev",
+    isNew: true,
+  },
+  {
+    title: "SQL Table Generator",
+    path: "/tools/sql-table",
+    category: "Data",
+  },
+  {
+    title: "JSON to C#",
+    path: "/tools/json-to-csharp",
+    category: "Data",
+    isNew: true,
+  },
+  {
+    title: "C# Model → TypeScript Interface",
+    path: "/tools/csharp-to-ts",
+    category: "Data",
+  },
+  {
+    title: "QR Code Generator",
+    path: "/tools/qr-code-generator",
+    category: "Assets",
+  },
+  {
+    title: "Favicon Generator",
+    path: "/tools/favicon-generator",
+    category: "Assets",
+    isNew: true,
+  },
+];
 
 function AppAppBar() {
   const [open, setOpen] = useState<boolean>(false);
@@ -129,54 +199,19 @@ function AppAppBar() {
                 transformOrigin={{ horizontal: "left", vertical: "top" }}
                 anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
               >
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/password-generator")}
-                >
-                  Password Generator
-                </MenuItem>
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/qr-code-generator")}
-                >
-                  QR Code Generator
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/jwt")}>
-                  JWT Encode / Decode
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/base64")}>
-                  Base64 Encode / Decode
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/sql-table")}>
-                  SQL Table Generator
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/csharp-to-ts")}>
-                  C# Model To TS Interface
-                </MenuItem>
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/json-formatter")}
-                >
-                  JSON Formatter
-                </MenuItem>
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/sql-formatter")}
-                >
-                  SQL Formatter
-                </MenuItem>
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/json-to-csharp")}
-                >
-                  JSON To C# Model
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/diff-checker")}>
-                  Diff Checker
-                </MenuItem>
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/favicon-generator")}
-                >
-                  Favicon Generator
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/uuid")}>
-                  UUID Generator & Validator
-                </MenuItem>
+                {tools.map((tool) => (
+                  <MenuItem
+                    key={tool.path}
+                    onClick={() => handleNavigate(tool.path)}
+                  >
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Box>{tool.title}</Box>
+                      {tool.isNew && (
+                        <Chip label="New" color="success" size="small" />
+                      )}
+                    </Stack>
+                  </MenuItem>
+                ))}
               </Menu>
             </Box>
           </Box>
@@ -242,54 +277,19 @@ function AppAppBar() {
                 </Box>
 
                 <MenuItem onClick={() => handleNavigate("/")}>Home</MenuItem>
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/password-generator")}
-                >
-                  Password Generator
-                </MenuItem>
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/qr-code-generator")}
-                >
-                  QR Code Generator
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/jwt")}>
-                  JWT Encode / Decode
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/base64")}>
-                  Base64 Encode / Decode
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/sql-table")}>
-                  SQL Table Generator
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/csharp-to-ts")}>
-                  C# Model To TS Interface
-                </MenuItem>
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/json-formatter")}
-                >
-                  JSON Formatter
-                </MenuItem>
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/sql-formatter")}
-                >
-                  SQL Formatter
-                </MenuItem>
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/json-to-csharp")}
-                >
-                  JSON To C# Model
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/diff-checker")}>
-                  Diff Checker
-                </MenuItem>
-                <MenuItem
-                  onClick={() => handleNavigate("/tools/favicon-generator")}
-                >
-                  Favicon Generator
-                </MenuItem>
-                <MenuItem onClick={() => handleNavigate("/tools/uuid")}>
-                  UUID Generator & Validator
-                </MenuItem>
+                {tools.map((tool) => (
+                  <MenuItem
+                    key={tool.path}
+                    onClick={() => handleNavigate(tool.path)}
+                  >
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      <Box>{tool.title}</Box>
+                      {tool.isNew && (
+                        <Chip label="New" color="success" size="small" />
+                      )}
+                    </Stack>
+                  </MenuItem>
+                ))}
               </Box>
             </Drawer>
           </Box>

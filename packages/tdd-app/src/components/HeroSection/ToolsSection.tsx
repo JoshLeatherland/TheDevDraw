@@ -1,4 +1,4 @@
-import { Box, styled } from "@mui/material";
+import { Box, Chip, Stack, styled } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
@@ -29,92 +29,139 @@ export const StyledToolCard = styled(Box)(({ theme }) => ({
     borderColor: (theme.vars || theme).palette.grey[700],
   }),
 }));
+type Tool = {
+  title: string;
+  description: string;
+  path: string;
+  category: "Popular" | "Dev" | "Data" | "Security" | "Assets";
+  isNew?: boolean;
+};
 
-const tools = [
+const tools: Tool[] = [
   {
     title: "Password Generator",
     description: "Generate strong, secure passwords instantly.",
     path: "/tools/password-generator",
-  },
-  {
-    title: "QR Code Generator",
-    description: "Create QR codes for links and data.",
-    path: "/tools/qr-code-generator",
+    category: "Security",
   },
   {
     title: "JWT Encode / Decode",
     description: "Inspect and generate JSON Web Tokens.",
     path: "/tools/jwt",
-  },
-  {
-    title: "Base64 Encode / Decode",
-    description: "Convert text and files to Base64 and back.",
-    path: "/tools/base64",
-  },
-  {
-    title: "SQL Table Generator",
-    description:
-      "Generate production-ready Microsoft SQL CREATE TABLE scripts.",
-    path: "/tools/sql-table",
-  },
-  {
-    title: "C# Model → TypeScript Interface",
-    description: "Convert C# DTOs and models into TypeScript interfaces.",
-    path: "/tools/csharp-to-ts",
+    category: "Security",
   },
   {
     title: "JSON Formatter",
     description: "Format, validate and minify JSON.",
     path: "/tools/json-formatter",
+    category: "Dev",
   },
   {
     title: "SQL Formatter",
     description: "Format and minify T-SQL queries for readability.",
     path: "/tools/sql-formatter",
-  },
-  {
-    title: "JSON to C#",
-    description: "Convert JSON into strongly typed C# models instantly.",
-    path: "/tools/json-to-csharp",
+    category: "Dev",
   },
   {
     title: "Diff Checker",
     description:
       "Compare two blocks of text and see the differences instantly.",
     path: "/tools/diff-checker",
-  },
-  {
-    title: "Favicon Generator",
-    description: "Generate favicon.ico and app icons from PNG or JPG images.",
-    path: "/tools/favicon-generator",
+    category: "Dev",
+    isNew: true,
   },
   {
     title: "UUID Generator & Validator",
     description:
       "Generate UUID v4/v7, validate existing UUIDs, and detect versions.",
     path: "/tools/uuid",
+    category: "Dev",
+    isNew: true,
+  },
+  {
+    title: "SQL Table Generator",
+    description:
+      "Generate production-ready Microsoft SQL CREATE TABLE scripts.",
+    path: "/tools/sql-table",
+    category: "Data",
+  },
+  {
+    title: "JSON to C#",
+    description: "Convert JSON into strongly typed C# models instantly.",
+    path: "/tools/json-to-csharp",
+    category: "Data",
+    isNew: true,
+  },
+  {
+    title: "C# Model → TypeScript Interface",
+    description: "Convert C# DTOs into TypeScript interfaces.",
+    path: "/tools/csharp-to-ts",
+    category: "Data",
+  },
+  {
+    title: "QR Code Generator",
+    description: "Create QR codes for links and data.",
+    path: "/tools/qr-code-generator",
+    category: "Assets",
+  },
+  {
+    title: "Favicon Generator",
+    description: "Generate favicon.ico and app icons from PNG or JPG images.",
+    path: "/tools/favicon-generator",
+    category: "Assets",
+    isNew: true,
   },
 ];
 
 function ToolsSection() {
   const navigate = useNavigate();
 
-  return (
-    <Grid container spacing={3} sx={{ mt: 8 }}>
-      {tools.map((tool) => (
-        <Grid size={{ xs: 12, sm: 6 }} key={tool.title}>
-          <StyledToolCard onClick={() => navigate(tool.path)}>
-            <Typography variant="h6" gutterBottom>
-              {tool.title}
-            </Typography>
+  const grouped = tools.reduce<Record<string, typeof tools>>((acc, tool) => {
+    acc[tool.category] ??= [];
+    acc[tool.category].push(tool);
+    return acc;
+  }, {});
 
-            <Typography variant="body2" color="text.secondary">
-              {tool.description}
-            </Typography>
-          </StyledToolCard>
-        </Grid>
+  return (
+    <Box sx={{ mt: 8 }}>
+      {Object.entries(grouped).map(([category, tools]) => (
+        <Box key={category} sx={{ mb: 6 }}>
+          <Typography
+            variant="overline"
+            sx={{ mb: 2, display: "block", opacity: 0.7 }}
+          >
+            {category}
+          </Typography>
+
+          <Grid container spacing={3}>
+            {tools.map((tool) => (
+              <Grid key={tool.title} size={{ xs: 12, sm: 6 }}>
+                <StyledToolCard onClick={() => navigate(tool.path)}>
+                  <Stack
+                    direction={{ xs: "column", sm: "row" }}
+                    justifyContent="space-between"
+                    alignItems={{ xs: "flex-start", sm: "center" }}
+                    spacing={1}
+                    mb={1}
+                  >
+                    <Typography variant="h6">{tool.title}</Typography>
+                    <Stack direction="row" spacing={1}>
+                      {tool.isNew && (
+                        <Chip label="NEW" color="success" size="small" />
+                      )}
+                    </Stack>
+                  </Stack>
+
+                  <Typography variant="body2" color="text.secondary">
+                    {tool.description}
+                  </Typography>
+                </StyledToolCard>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       ))}
-    </Grid>
+    </Box>
   );
 }
 
