@@ -102,6 +102,12 @@ const tools: Tool[] = [
     category: "Assets",
     isNew: true,
   },
+  {
+    title: "Palette Generator",
+    path: "/tools/palette-generator",
+    category: "Assets",
+    isNew: true,
+  },
 ];
 
 function AppAppBar() {
@@ -268,6 +274,7 @@ function AppAppBar() {
                   p: 2,
                   backgroundColor: "background.default",
                   height: "100%",
+                  overflow: "auto",
                 }}
               >
                 <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

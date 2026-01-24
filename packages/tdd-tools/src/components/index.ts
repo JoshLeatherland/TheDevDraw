@@ -11,3 +11,4 @@ export { default as JsonToCSharpTool } from "./JsonToCSharpTool";
 export { default as DiffCheckerTool } from "./DiffCheckerTool";
 export { default as FaviconGeneratorTool } from "./FaviconGeneratorTool";
 export { default as UuidTool } from "./UuidTool";
+export { default as PaletteGeneratorTool } from "./PaletteGeneratorTool";
