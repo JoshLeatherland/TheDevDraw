@@ -60,6 +60,7 @@ Current tools available:
 - Diff Checker
 - Favicon Generator
 - UUID Generator & Validator
+- Palette Generator
 
 More tools will be added over time.
 

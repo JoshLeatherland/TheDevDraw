@@ -10,6 +10,7 @@ import {
   JsonFormatterTool,
   JsonToCSharpTool,
   JwtTool,
+  PaletteGeneratorTool,
   PasswordGenerator,
   QRCodeGenerator,
   SqlFormatterTool,
@@ -92,9 +93,13 @@ function App() {
                 />
 
                 <Route path="/tools/uuid" element={<UuidTool />} />
+
+                <Route
+                  path="/tools/palette-generator"
+                  element={<PaletteGeneratorTool />}
+                />
               </Route>
             </Routes>
-
             <Footer />
           </Box>
         </Box>

@@ -111,6 +111,14 @@ const tools: Tool[] = [
     category: "Assets",
     isNew: true,
   },
+  {
+    title: "Palette Generator",
+    description:
+      "Generate random color palettes, lock colors, edit HEX, copy, and export as CSS.",
+    path: "/tools/palette-generator",
+    category: "Assets",
+    isNew: true,
+  },
 ];
 
 function ToolsSection() {
