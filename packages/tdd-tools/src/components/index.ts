@@ -12,3 +12,4 @@ export { default as DiffCheckerTool } from "./DiffCheckerTool";
 export { default as FaviconGeneratorTool } from "./FaviconGeneratorTool";
 export { default as UuidTool } from "./UuidTool";
 export { default as PaletteGeneratorTool } from "./PaletteGeneratorTool";
+export { default as ImageToBase64Tool } from "./ImageToBase64Tool";

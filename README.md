@@ -61,6 +61,7 @@ Current tools available:
 - Favicon Generator
 - UUID Generator & Validator
 - Palette Generator
+- Image to Base64
 
 More tools will be added over time.
 

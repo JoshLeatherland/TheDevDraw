@@ -97,6 +97,12 @@ const tools: Tool[] = [
     category: "Data",
   },
   {
+    title: "Image to Base64",
+    path: "/tools/image-to-base64",
+    category: "Data",
+    isNew: true,
+  },
+  {
     title: "QR Code Generator",
     path: "/tools/qr-code-generator",
     category: "Assets",

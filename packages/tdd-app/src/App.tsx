@@ -7,6 +7,7 @@ import {
   CSharpToTsTool,
   DiffCheckerTool,
   FaviconGeneratorTool,
+  ImageToBase64Tool,
   JsonFormatterTool,
   JsonToCSharpTool,
   JwtTool,
@@ -97,6 +98,11 @@ function App() {
                 <Route
                   path="/tools/palette-generator"
                   element={<PaletteGeneratorTool />}
+                />
+
+                <Route
+                  path="/tools/image-to-base64"
+                  element={<ImageToBase64Tool />}
                 />
               </Route>
             </Routes>
