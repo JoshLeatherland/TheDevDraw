@@ -11,13 +11,14 @@ import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ArrowDropDownRoundedIcon from "@mui/icons-material/ArrowDropDownRounded";
-import { ColorModeIconDropdown } from "../../components";
+import { ColorModeIconDropdown, ToolOptions } from "../../components";
 import lightLogo from "../../assets/logo-light.png";
 import darkLogo from "../../assets/logo-dark.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { Stack, Chip } from "@mui/material";
+import { Tool } from "../../types";
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
@@ -34,92 +35,6 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   boxShadow: (theme.vars || theme).shadows[1],
   padding: "8px 12px",
 }));
-
-type Tool = {
-  title: string;
-  path: string;
-  category: string;
-  isNew?: boolean;
-};
-
-const tools: Tool[] = [
-  {
-    title: "Password Generator",
-    path: "/tools/password-generator",
-    category: "Security",
-  },
-  {
-    title: "JWT Encode / Decode",
-    path: "/tools/jwt",
-    category: "Security",
-  },
-  {
-    title: "JSON Formatter",
-    path: "/tools/json-formatter",
-    category: "Dev",
-  },
-  {
-    title: "SQL Formatter",
-    path: "/tools/sql-formatter",
-    category: "Dev",
-  },
-  {
-    title: "Diff Checker",
-    path: "/tools/diff-checker",
-    category: "Dev",
-    isNew: true,
-  },
-  {
-    title: "UUID Generator & Validator",
-    path: "/tools/uuid",
-    category: "Dev",
-    isNew: true,
-  },
-  {
-    title: "SQL Table Generator",
-    path: "/tools/sql-table",
-    category: "Data",
-  },
-  {
-    title: "JSON to C#",
-    path: "/tools/json-to-csharp",
-    category: "Data",
-    isNew: true,
-  },
-  {
-    title: "C# Model → TypeScript Interface",
-    path: "/tools/csharp-to-ts",
-    category: "Data",
-  },
-  {
-    title: "Base64 Encode / Decode",
-    path: "/tools/base64",
-    category: "Data",
-  },
-  {
-    title: "Image to Base64",
-    path: "/tools/image-to-base64",
-    category: "Data",
-    isNew: true,
-  },
-  {
-    title: "QR Code Generator",
-    path: "/tools/qr-code-generator",
-    category: "Assets",
-  },
-  {
-    title: "Favicon Generator",
-    path: "/tools/favicon-generator",
-    category: "Assets",
-    isNew: true,
-  },
-  {
-    title: "Palette Generator",
-    path: "/tools/palette-generator",
-    category: "Assets",
-    isNew: true,
-  },
-];
 
 function AppAppBar() {
   const [open, setOpen] = useState<boolean>(false);
@@ -150,6 +65,8 @@ function AppAppBar() {
   const handleToolsClose = () => {
     setToolsAnchorEl(null);
   };
+
+  const tools = ToolOptions as Tool[];
 
   return (
     <AppBar
