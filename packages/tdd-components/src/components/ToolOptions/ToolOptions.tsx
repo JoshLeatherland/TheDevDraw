@@ -75,6 +75,13 @@ const toolOptions: Tool[] = [
     isNew: true,
   },
   {
+    title: "Base64 to Image",
+    description: "Convert Base64 string into an image.",
+    path: "/tools/base64-to-image",
+    category: "Data",
+    isNew: true,
+  },
+  {
     title: "QR Code Generator",
     description: "Create QR codes for links and data.",
     path: "/tools/qr-code-generator",
