@@ -1,3 +1,5 @@
+import Base64ToImageTool from "./Base64ToImageTool";
+
 export { default as Dashboard } from "./Dashboard";
 export { default as PasswordGenerator } from "./PasswordGenerator";
 export { default as QRCodeGenerator } from "./QRCodeGenerator";
@@ -13,3 +15,4 @@ export { default as FaviconGeneratorTool } from "./FaviconGeneratorTool";
 export { default as UuidTool } from "./UuidTool";
 export { default as PaletteGeneratorTool } from "./PaletteGeneratorTool";
 export { default as ImageToBase64Tool } from "./ImageToBase64Tool";
+export { default as Base64ToImageTool} from "./Base64ToImageTool"

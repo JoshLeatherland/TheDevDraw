@@ -3,6 +3,7 @@ import { alpha, Box, CssBaseline } from "@mui/material";
 import { Footer, HeroSection, PrivacyPolicy } from "./components";
 import { Route, Routes } from "react-router-dom";
 import {
+  Base64ToImageTool,
   Base64Tool,
   CSharpToTsTool,
   DiffCheckerTool,
@@ -103,6 +104,11 @@ function App() {
                 <Route
                   path="/tools/image-to-base64"
                   element={<ImageToBase64Tool />}
+                />
+
+                <Route
+                  path="/tools/base64-to-image"
+                  element={<Base64ToImageTool />}
                 />
               </Route>
             </Routes>
