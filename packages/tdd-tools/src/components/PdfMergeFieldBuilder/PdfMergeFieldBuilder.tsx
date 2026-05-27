@@ -4,6 +4,7 @@ import {
   Alert,
   Box,
   Button,
+  Checkbox,
   Chip,
   CircularProgress,
   Container,
@@ -12,6 +13,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  FormControlLabel,
   IconButton,
   Paper,
   Stack,
@@ -24,6 +26,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DownloadIcon from "@mui/icons-material/Download";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NearMeIcon from "@mui/icons-material/NearMe";
@@ -46,6 +49,36 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.mjs",
   import.meta.url,
 ).toString();
+
+const TUTORIAL_STORAGE_KEY = "pdf-builder-tutorial-seen";
+
+const TUTORIAL_STEPS: { emoji: string; title: string; body: string }[] = [
+  {
+    emoji: "📄",
+    title: "Upload your PDF",
+    body: "Drop a PDF onto the canvas or click Choose file. Multi-page documents are supported - navigate pages with the arrows in the toolbar.",
+  },
+  {
+    emoji: "✏️",
+    title: "Draw a field",
+    body: "Select the Text or Multiline tool from the toolbar, then click and drag on the PDF to draw a field box. A dialog will prompt you to name it.",
+  },
+  {
+    emoji: "🏷️",
+    title: "Name the field",
+    body: "The name is the key your backend uses to fill the value - e.g. customer_name. Fields sharing the same name will all be filled together.",
+  },
+  {
+    emoji: "↔️",
+    title: "Resize & reposition",
+    body: "Switch to Select mode to drag fields around the page. Click a field to reveal its handles and drag them to resize. Adjust font size in the sidebar.",
+  },
+  {
+    emoji: "⬇️",
+    title: "Export",
+    body: "Click Export PDF to download a PDF containing real AcroForm text fields. Any PDF library (iTextSharp, iText, pdf-lib, etc.) can fill them by name.",
+  },
+];
 
 const MIN_NORM = 0.015;
 const HANDLE_PX = 8;
@@ -106,6 +139,10 @@ export default function PdfMergeFieldBuilder() {
   const [isRendering, setIsRendering] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [tutorialOpen, setTutorialOpen] = useState(
+    () => localStorage.getItem(TUTORIAL_STORAGE_KEY) !== "1",
+  );
+  const [tutorialDontShow, setTutorialDontShow] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -202,7 +239,16 @@ export default function PdfMergeFieldBuilder() {
   useEffect(() => {
     const handleMoveAt = (clientX: number, clientY: number) => {
       if (dragRef.current) {
-        const { kind, fieldId, handle, startMX, startMY, canvasW, canvasH, orig } = dragRef.current;
+        const {
+          kind,
+          fieldId,
+          handle,
+          startMX,
+          startMY,
+          canvasW,
+          canvasH,
+          orig,
+        } = dragRef.current;
         const dx = (clientX - startMX) / canvasW;
         const dy = (clientY - startMY) / canvasH;
 
@@ -233,7 +279,13 @@ export default function PdfMergeFieldBuilder() {
               y += h - nh;
               h = nh;
             }
-            return { ...f, x: clamp(x, 0, 1 - w), y: clamp(y, 0, 1 - h), width: w, height: h };
+            return {
+              ...f,
+              x: clamp(x, 0, 1 - w),
+              y: clamp(y, 0, 1 - h),
+              width: w,
+              height: h,
+            };
           }),
         );
         return;
@@ -253,7 +305,10 @@ export default function PdfMergeFieldBuilder() {
     };
 
     const handleUpAt = (clientX: number, clientY: number) => {
-      if (dragRef.current) { dragRef.current = null; return; }
+      if (dragRef.current) {
+        dragRef.current = null;
+        return;
+      }
 
       if (drawStartRef.current) {
         const pos = toNorm(clientX, clientY);
@@ -267,7 +322,17 @@ export default function PdfMergeFieldBuilder() {
           const w = Math.abs(pos.x - start.x);
           const h = Math.abs(pos.y - start.y);
           if (w > MIN_NORM && h > MIN_NORM) {
-            setNamingField({ id: uuidv4(), name: "", type: drawType, page: currentPage, x, y, width: w, height: h, fontSize: 10 });
+            setNamingField({
+              id: uuidv4(),
+              name: "",
+              type: drawType,
+              page: currentPage,
+              x,
+              y,
+              width: w,
+              height: h,
+              fontSize: 10,
+            });
             setPendingName("");
           }
         }
@@ -275,7 +340,7 @@ export default function PdfMergeFieldBuilder() {
     };
 
     const onMouseMove = (e: MouseEvent) => handleMoveAt(e.clientX, e.clientY);
-    const onMouseUp   = (e: MouseEvent) => handleUpAt(e.clientX, e.clientY);
+    const onMouseUp = (e: MouseEvent) => handleUpAt(e.clientX, e.clientY);
 
     const onTouchMove = (e: TouchEvent) => {
       if (dragRef.current || drawStartRef.current) e.preventDefault();
@@ -293,15 +358,15 @@ export default function PdfMergeFieldBuilder() {
     };
 
     window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup",   onMouseUp);
+    window.addEventListener("mouseup", onMouseUp);
     window.addEventListener("touchmove", onTouchMove, { passive: false });
-    window.addEventListener("touchend",  onTouchEnd);
+    window.addEventListener("touchend", onTouchEnd);
     window.addEventListener("touchcancel", onTouchCancel);
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup",   onMouseUp);
+      window.removeEventListener("mouseup", onMouseUp);
       window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend",  onTouchEnd);
+      window.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("touchcancel", onTouchCancel);
     };
   }, [toNorm, drawType, currentPage]);
@@ -310,7 +375,10 @@ export default function PdfMergeFieldBuilder() {
 
   const onAreaPointerDown = useCallback(
     (clientX: number, clientY: number) => {
-      if (mode !== "draw") { setSelectedId(null); return; }
+      if (mode !== "draw") {
+        setSelectedId(null);
+        return;
+      }
       const pos = toNorm(clientX, clientY);
       if (pos) drawStartRef.current = pos;
     },
@@ -324,18 +392,40 @@ export default function PdfMergeFieldBuilder() {
       const r = canvasRef.current?.getBoundingClientRect();
       const field = fields.find((f) => f.id === fieldId);
       if (!r || !field) return;
-      dragRef.current = { kind: "move", fieldId, startMX: clientX, startMY: clientY, canvasW: r.width, canvasH: r.height, orig: { ...field } };
+      dragRef.current = {
+        kind: "move",
+        fieldId,
+        startMX: clientX,
+        startMY: clientY,
+        canvasW: r.width,
+        canvasH: r.height,
+        orig: { ...field },
+      };
       setSelectedId(fieldId);
     },
     [fields],
   );
 
   const beginResize = useCallback(
-    (clientX: number, clientY: number, fieldId: string, handle: ResizeHandle) => {
+    (
+      clientX: number,
+      clientY: number,
+      fieldId: string,
+      handle: ResizeHandle,
+    ) => {
       const r = canvasRef.current?.getBoundingClientRect();
       const field = fields.find((f) => f.id === fieldId);
       if (!r || !field) return;
-      dragRef.current = { kind: "resize", fieldId, handle, startMX: clientX, startMY: clientY, canvasW: r.width, canvasH: r.height, orig: { ...field } };
+      dragRef.current = {
+        kind: "resize",
+        fieldId,
+        handle,
+        startMX: clientX,
+        startMY: clientY,
+        canvasW: r.width,
+        canvasH: r.height,
+        orig: { ...field },
+      };
       setSelectedId(fieldId);
     },
     [fields],
@@ -359,6 +449,13 @@ export default function PdfMergeFieldBuilder() {
     setSelectedId((prev) => (prev === id ? null : prev));
   }, []);
 
+  // -- Tutorial -----------------------------------------------------------------
+
+  const closeTutorial = useCallback(() => {
+    if (tutorialDontShow) localStorage.setItem(TUTORIAL_STORAGE_KEY, "1");
+    setTutorialOpen(false);
+  }, [tutorialDontShow]);
+
   // -- Export -------------------------------------------------------------------
 
   const exportPdf = useCallback(async () => {
@@ -368,14 +465,16 @@ export default function PdfMergeFieldBuilder() {
     // Pre-flight validation
     const unnamed = fields.filter((f) => !f.name.trim());
     if (unnamed.length) {
-      setError(`${unnamed.length} field(s) have no name. Please name all fields before exporting.`);
+      setError(
+        `${unnamed.length} field(s) have no name. Please name all fields before exporting.`,
+      );
       setIsExporting(false);
       return;
     }
 
     setError(null);
     try {
-      const doc = await PDFDocument.load(pdfBytes);=
+      const doc = await PDFDocument.load(pdfBytes);
       const font = await doc.embedFont(StandardFonts.Helvetica);
       const form = doc.getForm();
 
@@ -446,11 +545,74 @@ export default function PdfMergeFieldBuilder() {
   const pageFields = fields.filter((f) => f.page === currentPage);
   const selectedField = fields.find((f) => f.id === selectedId) ?? null;
 
+  // -- Tutorial dialog (shared between upload + editor screens) ----------------
+
+  const tutorialDialog = (
+    <Dialog open={tutorialOpen} onClose={closeTutorial} maxWidth="sm" fullWidth>
+      <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+        PDF Merge Field Builder
+        <Chip
+          label="Beta"
+          size="small"
+          color="warning"
+          sx={{ fontWeight: 600 }}
+        />
+      </DialogTitle>
+      <DialogContent dividers>
+        <Stack spacing={2.5} sx={{ pt: 0.5 }}>
+          {TUTORIAL_STEPS.map((step) => (
+            <Stack
+              key={step.title}
+              direction="row"
+              spacing={2}
+              alignItems="flex-start"
+            >
+              <Typography
+                sx={{
+                  fontSize: 24,
+                  lineHeight: 1.3,
+                  flexShrink: 0,
+                  userSelect: "none",
+                }}
+              >
+                {step.emoji}
+              </Typography>
+              <Box>
+                <Typography variant="subtitle2" gutterBottom>
+                  {step.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {step.body}
+                </Typography>
+              </Box>
+            </Stack>
+          ))}
+        </Stack>
+      </DialogContent>
+      <DialogActions sx={{ justifyContent: "space-between", px: 3, py: 1.5 }}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              size="small"
+              checked={tutorialDontShow}
+              onChange={(e) => setTutorialDontShow(e.target.checked)}
+            />
+          }
+          label={<Typography variant="body2">Don't show again</Typography>}
+        />
+        <Button variant="contained" onClick={closeTutorial}>
+          Got it
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
   // -- Upload screen ------------------------------------------------------------
 
   if (!pdfDoc) {
     return (
       <Container maxWidth="lg" sx={{ pt: { xs: 10, sm: 12 }, pb: 4 }}>
+        {tutorialDialog}
         <Box
           onDrop={(e) => {
             e.preventDefault();
@@ -472,22 +634,42 @@ export default function PdfMergeFieldBuilder() {
           }}
         >
           <UploadFileIcon sx={{ fontSize: 56, color: "text.disabled" }} />
-          <Typography variant="h6" color="text.secondary">
-            Drop a PDF here
-          </Typography>
-          <Button
-            variant="contained"
-            component="label"
-            startIcon={<UploadFileIcon />}
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1}
+            justifyContent="center"
           >
-            Choose file
-            <input
-              type="file"
-              hidden
-              accept="application/pdf"
-              onChange={onFileChange}
+            <Typography variant="h6" color="text.secondary">
+              Drop a PDF here
+            </Typography>
+            <Chip
+              label="Beta"
+              size="small"
+              color="warning"
+              sx={{ fontWeight: 600 }}
             />
-          </Button>
+          </Stack>
+          <Stack direction="row" spacing={1}>
+            <Button
+              variant="contained"
+              component="label"
+              startIcon={<UploadFileIcon />}
+            >
+              Choose file
+              <input
+                type="file"
+                hidden
+                accept="application/pdf"
+                onChange={onFileChange}
+              />
+            </Button>
+            <Tooltip title="How to use">
+              <IconButton onClick={() => setTutorialOpen(true)}>
+                <HelpOutlineIcon />
+              </IconButton>
+            </Tooltip>
+          </Stack>
           {error && <Alert severity="error">{error}</Alert>}
         </Box>
       </Container>
@@ -498,7 +680,15 @@ export default function PdfMergeFieldBuilder() {
 
   return (
     <Container maxWidth="xl" sx={{ pt: { xs: 10, sm: 12 }, pb: 4 }}>
-      <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 2, alignItems: "flex-start" }}>
+      {tutorialDialog}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          gap: 2,
+          alignItems: "flex-start",
+        }}
+      >
         {/* PDF viewer + toolbar */}
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {/* Toolbar */}
@@ -586,6 +776,19 @@ export default function PdfMergeFieldBuilder() {
 
             <Box sx={{ flex: 1 }} />
 
+            <Chip
+              label="Beta"
+              size="small"
+              color="warning"
+              sx={{ fontWeight: 600 }}
+            />
+
+            <Tooltip title="How to use">
+              <IconButton size="small" onClick={() => setTutorialOpen(true)}>
+                <HelpOutlineIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+
             <Button
               variant="contained"
               size="small"
@@ -616,8 +819,15 @@ export default function PdfMergeFieldBuilder() {
           {/* Canvas + field overlays */}
           <Box
             ref={containerRef}
-            onMouseDown={(e) => { e.preventDefault(); onAreaPointerDown(e.clientX, e.clientY); }}
-            onTouchStart={(e) => { e.preventDefault(); const t = e.touches[0]; if (t) onAreaPointerDown(t.clientX, t.clientY); }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              onAreaPointerDown(e.clientX, e.clientY);
+            }}
+            onTouchStart={(e) => {
+              e.preventDefault();
+              const t = e.touches[0];
+              if (t) onAreaPointerDown(t.clientX, t.clientY);
+            }}
             sx={{
               position: "relative",
               width: "100%",
@@ -661,10 +871,17 @@ export default function PdfMergeFieldBuilder() {
                 <Box
                   key={field.id}
                   onMouseDown={(e) => {
-                    if (mode === "select") { e.stopPropagation(); beginMove(e.clientX, e.clientY, field.id); }
+                    if (mode === "select") {
+                      e.stopPropagation();
+                      beginMove(e.clientX, e.clientY, field.id);
+                    }
                   }}
                   onTouchStart={(e) => {
-                    if (mode === "select") { e.stopPropagation(); const t = e.touches[0]; if (t) beginMove(t.clientX, t.clientY, field.id); }
+                    if (mode === "select") {
+                      e.stopPropagation();
+                      const t = e.touches[0];
+                      if (t) beginMove(t.clientX, t.clientY, field.id);
+                    }
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -719,8 +936,15 @@ export default function PdfMergeFieldBuilder() {
                     HANDLES.map((h) => (
                       <Box
                         key={h}
-                        onMouseDown={(e) => { e.stopPropagation(); beginResize(e.clientX, e.clientY, field.id, h); }}
-                        onTouchStart={(e) => { e.stopPropagation(); const t = e.touches[0]; if (t) beginResize(t.clientX, t.clientY, field.id, h); }}
+                        onMouseDown={(e) => {
+                          e.stopPropagation();
+                          beginResize(e.clientX, e.clientY, field.id, h);
+                        }}
+                        onTouchStart={(e) => {
+                          e.stopPropagation();
+                          const t = e.touches[0];
+                          if (t) beginResize(t.clientX, t.clientY, field.id, h);
+                        }}
                         style={handleStyle(h, handlePx)}
                         sx={{
                           position: "absolute",
@@ -803,7 +1027,10 @@ export default function PdfMergeFieldBuilder() {
                 inputProps={{ min: 1, max: 72, step: 1 }}
                 value={selectedField.fontSize}
                 onChange={(e) => {
-                  const v = Math.max(1, Math.min(72, Number(e.target.value) || 10));
+                  const v = Math.max(
+                    1,
+                    Math.min(72, Number(e.target.value) || 10),
+                  );
                   setFields((prev) =>
                     prev.map((f) =>
                       f.id === selectedId ? { ...f, fontSize: v } : f,
