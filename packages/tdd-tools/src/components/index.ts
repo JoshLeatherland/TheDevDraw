@@ -17,3 +17,4 @@ export { default as PaletteGeneratorTool } from "./PaletteGeneratorTool";
 export { default as ImageToBase64Tool } from "./ImageToBase64Tool";
 export { default as Base64ToImageTool } from "./Base64ToImageTool";
 export { PdfMergeFieldBuilder } from "./PdfMergeFieldBuilder";
+export { ImageToTextTool } from "./ImageToTextTool";

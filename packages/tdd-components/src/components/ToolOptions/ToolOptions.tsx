@@ -39,7 +39,6 @@ const toolOptions: Tool[] = [
       "Generate UUID v4/v7, validate existing UUIDs, and detect versions.",
     path: "/tools/uuid",
     category: "Dev",
-    isNew: true,
   },
   {
     title: "SQL Table Generator",
@@ -53,7 +52,6 @@ const toolOptions: Tool[] = [
     description: "Convert JSON into strongly typed C# models instantly.",
     path: "/tools/json-to-csharp",
     category: "Data",
-    isNew: true,
   },
   {
     title: "C# Model → TypeScript Interface",
@@ -72,14 +70,12 @@ const toolOptions: Tool[] = [
     description: "Convert images into Base64 strings for API testing.",
     path: "/tools/image-to-base64",
     category: "Data",
-    isNew: true,
   },
   {
     title: "Base64 to Image",
     description: "Convert Base64 string into an image.",
     path: "/tools/base64-to-image",
     category: "Data",
-    isNew: true,
   },
   {
     title: "QR Code Generator",
@@ -92,7 +88,6 @@ const toolOptions: Tool[] = [
     description: "Generate favicon.ico and app icons from PNG or JPG images.",
     path: "/tools/favicon-generator",
     category: "Assets",
-    isNew: true,
   },
   {
     title: "Palette Generator",
@@ -100,7 +95,6 @@ const toolOptions: Tool[] = [
       "Generate random color palettes, lock colors, edit HEX, copy, and export as CSS.",
     path: "/tools/palette-generator",
     category: "Assets",
-    isNew: true,
   },
   {
     title: "PDF Merge Field Builder",
@@ -108,6 +102,14 @@ const toolOptions: Tool[] = [
       "Upload a PDF, drag and place named AcroForm fields, then export a template ready for your application.",
     path: "/tools/pdf-merge-field-builder",
     category: "Dev",
+    isNew: true,
+  },
+  {
+    title: "Image to Text (OCR)",
+    description:
+      "Extract text from any image using OCR - runs entirely in your browser, no uploads required.",
+    path: "/tools/image-to-text",
+    category: "Assets",
     isNew: true,
   },
 ];
