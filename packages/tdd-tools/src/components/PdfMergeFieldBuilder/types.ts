@@ -14,6 +14,8 @@ export interface PdfField {
   y: number;
   width: number;
   height: number;
+  /** Font size in pt (1–72). */
+  fontSize: number;
 }
 
 export type DragState = {

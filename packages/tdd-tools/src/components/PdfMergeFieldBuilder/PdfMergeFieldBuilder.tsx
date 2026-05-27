@@ -30,7 +30,7 @@ import NearMeIcon from "@mui/icons-material/NearMe";
 import SubjectIcon from "@mui/icons-material/Subject";
 import TextFieldsIcon from "@mui/icons-material/TextFields";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-import { PDFDocument, rgb } from "pdf-lib";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import * as pdfjsLib from "pdfjs-dist";
 import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
 import { v4 as uuidv4 } from "uuid";
@@ -267,7 +267,7 @@ export default function PdfMergeFieldBuilder() {
           const w = Math.abs(pos.x - start.x);
           const h = Math.abs(pos.y - start.y);
           if (w > MIN_NORM && h > MIN_NORM) {
-            setNamingField({ id: uuidv4(), name: "", type: drawType, page: currentPage, x, y, width: w, height: h });
+            setNamingField({ id: uuidv4(), name: "", type: drawType, page: currentPage, x, y, width: w, height: h, fontSize: 10 });
             setPendingName("");
           }
         }
@@ -365,12 +365,24 @@ export default function PdfMergeFieldBuilder() {
     if (!pdfBytes) return;
 
     setIsExporting(true);
+    // Pre-flight validation
+    const unnamed = fields.filter((f) => !f.name.trim());
+    if (unnamed.length) {
+      setError(`${unnamed.length} field(s) have no name. Please name all fields before exporting.`);
+      setIsExporting(false);
+      return;
+    }
+
     setError(null);
     try {
-      const doc = await PDFDocument.load(pdfBytes);
+      const doc = await PDFDocument.load(pdfBytes);=
+      const font = await doc.embedFont(StandardFonts.Helvetica);
       const form = doc.getForm();
 
-      const seen = new Map<string, ReturnType<typeof form.createTextField>>();
+      const seen = new Map<
+        string,
+        { tf: ReturnType<typeof form.createTextField>; fontSize: number }
+      >();
 
       for (const field of fields) {
         const page = doc.getPage(field.page - 1);
@@ -382,21 +394,35 @@ export default function PdfMergeFieldBuilder() {
         const w = field.width * pw;
         const h = field.height * ph;
 
-        let tf = seen.get(field.name);
-        if (!tf) {
-          tf = form.createTextField(field.name);
+        let entry = seen.get(field.name);
+        if (!entry) {
+          const tf = form.createTextField(field.name);
           if (field.type === "multiline") tf.enableMultiline();
-          seen.set(field.name, tf);
+          entry = {
+            tf,
+            fontSize: Math.max(
+              1,
+              Number.isFinite(field.fontSize) ? field.fontSize : 10,
+            ),
+          };
+          seen.set(field.name, entry);
         }
 
-        tf.addToPage(page, {
+        // Passing font here is what writes the /DA entry into the field widget
+        entry.tf.addToPage(page, {
           x,
           y,
           width: w,
           height: h,
           borderColor: rgb(0, 0, 0),
           borderWidth: 1,
+          font,
         });
+      }
+
+      // /DA entries now exist on every field - safe to call setFontSize
+      for (const { tf, fontSize } of seen.values()) {
+        tf.setFontSize(fontSize);
       }
 
       const bytes = await doc.save();
@@ -407,8 +433,9 @@ export default function PdfMergeFieldBuilder() {
       a.download = "template.pdf";
       a.click();
       URL.revokeObjectURL(a.href);
-    } catch {
-      setError("Export failed. Please try again.");
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setError(`Export failed: ${msg}`);
     } finally {
       setIsExporting(false);
     }
@@ -768,6 +795,21 @@ export default function PdfMergeFieldBuilder() {
                     ),
                   )
                 }
+              />
+              <TextField
+                label="Font size (pt)"
+                size="small"
+                type="number"
+                inputProps={{ min: 1, max: 72, step: 1 }}
+                value={selectedField.fontSize}
+                onChange={(e) => {
+                  const v = Math.max(1, Math.min(72, Number(e.target.value) || 10));
+                  setFields((prev) =>
+                    prev.map((f) =>
+                      f.id === selectedId ? { ...f, fontSize: v } : f,
+                    ),
+                  );
+                }}
               />
               <Stack direction="row" alignItems="center">
                 <Chip
