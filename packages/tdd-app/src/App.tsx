@@ -9,6 +9,7 @@ import {
   DiffCheckerTool,
   FaviconGeneratorTool,
   ImageToBase64Tool,
+  ImageToTextTool,
   JsonFormatterTool,
   JsonToCSharpTool,
   JwtTool,
@@ -115,6 +116,11 @@ function App() {
                 <Route
                   path="/tools/pdf-merge-field-builder"
                   element={<PdfMergeFieldBuilder />}
+                />
+
+                <Route
+                  path="/tools/image-to-text"
+                  element={<ImageToTextTool />}
                 />
               </Route>
             </Routes>

@@ -104,6 +104,14 @@ const toolOptions: Tool[] = [
     category: "Dev",
     isNew: true,
   },
+  {
+    title: "Image to Text (OCR)",
+    description:
+      "Extract text from any image using OCR - runs entirely in your browser, no uploads required.",
+    path: "/tools/image-to-text",
+    category: "Assets",
+    isNew: true,
+  },
 ];
 
 export default toolOptions;
