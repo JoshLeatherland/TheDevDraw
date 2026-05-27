@@ -14,6 +14,7 @@ import {
   JwtTool,
   PaletteGeneratorTool,
   PasswordGenerator,
+  PdfMergeFieldBuilder,
   QRCodeGenerator,
   SqlFormatterTool,
   SqlTableGenerator,
@@ -109,6 +110,11 @@ function App() {
                 <Route
                   path="/tools/base64-to-image"
                   element={<Base64ToImageTool />}
+                />
+
+                <Route
+                  path="/tools/pdf-merge-field-builder"
+                  element={<PdfMergeFieldBuilder />}
                 />
               </Route>
             </Routes>

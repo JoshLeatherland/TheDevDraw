@@ -102,6 +102,14 @@ const toolOptions: Tool[] = [
     category: "Assets",
     isNew: true,
   },
+  {
+    title: "PDF Merge Field Builder",
+    description:
+      "Upload a PDF, drag and place named AcroForm fields, then export a template ready for your application.",
+    path: "/tools/pdf-merge-field-builder",
+    category: "Dev",
+    isNew: true,
+  },
 ];
 
 export default toolOptions;
