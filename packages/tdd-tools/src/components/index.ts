@@ -15,4 +15,5 @@ export { default as FaviconGeneratorTool } from "./FaviconGeneratorTool";
 export { default as UuidTool } from "./UuidTool";
 export { default as PaletteGeneratorTool } from "./PaletteGeneratorTool";
 export { default as ImageToBase64Tool } from "./ImageToBase64Tool";
-export { default as Base64ToImageTool} from "./Base64ToImageTool"
+export { default as Base64ToImageTool } from "./Base64ToImageTool";
+export { PdfMergeFieldBuilder } from "./PdfMergeFieldBuilder";
