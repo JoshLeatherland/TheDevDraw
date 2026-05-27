@@ -20,6 +20,7 @@ import {
   ToggleButtonGroup,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -48,10 +49,11 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 
 const MIN_NORM = 0.015;
 const HANDLE_PX = 8;
+const HANDLE_PX_TOUCH = 18;
 const HANDLES: ResizeHandle[] = ["nw", "n", "ne", "e", "se", "s", "sw", "w"];
 
-function handleStyle(h: ResizeHandle): CSSProperties {
-  const neg = `-${HANDLE_PX / 2}px`;
+function handleStyle(h: ResizeHandle, size: number): CSSProperties {
+  const neg = `-${size / 2}px`;
   const mid = "50%";
   const positions: Record<ResizeHandle, CSSProperties> = {
     nw: { top: neg, left: neg },
@@ -82,6 +84,9 @@ function clamp(v: number, lo: number, hi: number) {
 }
 
 export default function PdfMergeFieldBuilder() {
+  const isMobile = useMediaQuery("(max-width:899px)");
+  const handlePx = isMobile ? HANDLE_PX_TOUCH : HANDLE_PX;
+
   const [pdfBytes, setPdfBytes] = useState<Uint8Array | null>(null);
   const [pdfDoc, setPdfDoc] = useState<PDFDocumentProxy | null>(null);
   const [numPages, setNumPages] = useState(0);
@@ -192,23 +197,14 @@ export default function PdfMergeFieldBuilder() {
     };
   }, []);
 
-  // -- Global mouse listeners (drag + draw release) -----------------------------
+  // -- Global pointer listeners (mouse + touch, drag + draw release) ------------
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
+    const handleMoveAt = (clientX: number, clientY: number) => {
       if (dragRef.current) {
-        const {
-          kind,
-          fieldId,
-          handle,
-          startMX,
-          startMY,
-          canvasW,
-          canvasH,
-          orig,
-        } = dragRef.current;
-        const dx = (e.clientX - startMX) / canvasW;
-        const dy = (e.clientY - startMY) / canvasH;
+        const { kind, fieldId, handle, startMX, startMY, canvasW, canvasH, orig } = dragRef.current;
+        const dx = (clientX - startMX) / canvasW;
+        const dy = (clientY - startMY) / canvasH;
 
         setFields((prev) =>
           prev.map((f) => {
@@ -237,20 +233,14 @@ export default function PdfMergeFieldBuilder() {
               y += h - nh;
               h = nh;
             }
-            return {
-              ...f,
-              x: clamp(x, 0, 1 - w),
-              y: clamp(y, 0, 1 - h),
-              width: w,
-              height: h,
-            };
+            return { ...f, x: clamp(x, 0, 1 - w), y: clamp(y, 0, 1 - h), width: w, height: h };
           }),
         );
         return;
       }
 
       if (drawStartRef.current) {
-        const pos = toNorm(e.clientX, e.clientY);
+        const pos = toNorm(clientX, clientY);
         if (!pos) return;
         const { x: sx, y: sy } = drawStartRef.current;
         setDrawPreview({
@@ -262,14 +252,11 @@ export default function PdfMergeFieldBuilder() {
       }
     };
 
-    const onUp = (e: MouseEvent) => {
-      if (dragRef.current) {
-        dragRef.current = null;
-        return;
-      }
+    const handleUpAt = (clientX: number, clientY: number) => {
+      if (dragRef.current) { dragRef.current = null; return; }
 
       if (drawStartRef.current) {
-        const pos = toNorm(e.clientX, e.clientY);
+        const pos = toNorm(clientX, clientY);
         const start = drawStartRef.current;
         drawStartRef.current = null;
         setDrawPreview(null);
@@ -280,83 +267,75 @@ export default function PdfMergeFieldBuilder() {
           const w = Math.abs(pos.x - start.x);
           const h = Math.abs(pos.y - start.y);
           if (w > MIN_NORM && h > MIN_NORM) {
-            setNamingField({
-              id: uuidv4(),
-              name: "",
-              type: drawType,
-              page: currentPage,
-              x,
-              y,
-              width: w,
-              height: h,
-            });
+            setNamingField({ id: uuidv4(), name: "", type: drawType, page: currentPage, x, y, width: w, height: h });
             setPendingName("");
           }
         }
       }
     };
 
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
+    const onMouseMove = (e: MouseEvent) => handleMoveAt(e.clientX, e.clientY);
+    const onMouseUp   = (e: MouseEvent) => handleUpAt(e.clientX, e.clientY);
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (dragRef.current || drawStartRef.current) e.preventDefault();
+      const t = e.touches[0];
+      if (t) handleMoveAt(t.clientX, t.clientY);
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      const t = e.changedTouches[0];
+      if (t) handleUpAt(t.clientX, t.clientY);
+    };
+    const onTouchCancel = () => {
+      dragRef.current = null;
+      drawStartRef.current = null;
+      setDrawPreview(null);
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup",   onMouseUp);
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend",  onTouchEnd);
+    window.addEventListener("touchcancel", onTouchCancel);
     return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup",   onMouseUp);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend",  onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchCancel);
     };
   }, [toNorm, drawType, currentPage]);
 
-  // -- Canvas area mouse-down (start draw or deselect) --------------------------
+  // -- Canvas area pointer-down (start draw or deselect) ------------------------
 
-  const onAreaMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (mode !== "draw") {
-        setSelectedId(null);
-        return;
-      }
-      e.preventDefault();
-      const pos = toNorm(e.clientX, e.clientY);
+  const onAreaPointerDown = useCallback(
+    (clientX: number, clientY: number) => {
+      if (mode !== "draw") { setSelectedId(null); return; }
+      const pos = toNorm(clientX, clientY);
       if (pos) drawStartRef.current = pos;
     },
     [mode, toNorm],
   );
 
-  // -- Field interaction starters -----------------------------------------------
+  // -- Field interaction starters (shared between mouse and touch) --------------
 
-  const startMove = useCallback(
-    (e: React.MouseEvent, fieldId: string) => {
-      e.stopPropagation();
+  const beginMove = useCallback(
+    (clientX: number, clientY: number, fieldId: string) => {
       const r = canvasRef.current?.getBoundingClientRect();
       const field = fields.find((f) => f.id === fieldId);
       if (!r || !field) return;
-      dragRef.current = {
-        kind: "move",
-        fieldId,
-        startMX: e.clientX,
-        startMY: e.clientY,
-        canvasW: r.width,
-        canvasH: r.height,
-        orig: { ...field },
-      };
+      dragRef.current = { kind: "move", fieldId, startMX: clientX, startMY: clientY, canvasW: r.width, canvasH: r.height, orig: { ...field } };
       setSelectedId(fieldId);
     },
     [fields],
   );
 
-  const startResize = useCallback(
-    (e: React.MouseEvent, fieldId: string, handle: ResizeHandle) => {
-      e.stopPropagation();
+  const beginResize = useCallback(
+    (clientX: number, clientY: number, fieldId: string, handle: ResizeHandle) => {
       const r = canvasRef.current?.getBoundingClientRect();
       const field = fields.find((f) => f.id === fieldId);
       if (!r || !field) return;
-      dragRef.current = {
-        kind: "resize",
-        fieldId,
-        handle,
-        startMX: e.clientX,
-        startMY: e.clientY,
-        canvasW: r.width,
-        canvasH: r.height,
-        orig: { ...field },
-      };
+      dragRef.current = { kind: "resize", fieldId, handle, startMX: clientX, startMY: clientY, canvasW: r.width, canvasH: r.height, orig: { ...field } };
       setSelectedId(fieldId);
     },
     [fields],
@@ -492,7 +471,7 @@ export default function PdfMergeFieldBuilder() {
 
   return (
     <Container maxWidth="xl" sx={{ pt: { xs: 10, sm: 12 }, pb: 4 }}>
-      <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start" }}>
+      <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 2, alignItems: "flex-start" }}>
         {/* PDF viewer + toolbar */}
         <Box sx={{ flex: 1, minWidth: 0 }}>
           {/* Toolbar */}
@@ -610,12 +589,14 @@ export default function PdfMergeFieldBuilder() {
           {/* Canvas + field overlays */}
           <Box
             ref={containerRef}
-            onMouseDown={onAreaMouseDown}
+            onMouseDown={(e) => { e.preventDefault(); onAreaPointerDown(e.clientX, e.clientY); }}
+            onTouchStart={(e) => { e.preventDefault(); const t = e.touches[0]; if (t) onAreaPointerDown(t.clientX, t.clientY); }}
             sx={{
               position: "relative",
               width: "100%",
               cursor: mode === "draw" ? "crosshair" : "default",
               userSelect: "none",
+              touchAction: mode === "draw" ? "none" : "auto",
               border: "1px solid",
               borderColor: "divider",
               borderRadius: 1,
@@ -653,7 +634,10 @@ export default function PdfMergeFieldBuilder() {
                 <Box
                   key={field.id}
                   onMouseDown={(e) => {
-                    if (mode === "select") startMove(e, field.id);
+                    if (mode === "select") { e.stopPropagation(); beginMove(e.clientX, e.clientY, field.id); }
+                  }}
+                  onTouchStart={(e) => {
+                    if (mode === "select") { e.stopPropagation(); const t = e.touches[0]; if (t) beginMove(t.clientX, t.clientY, field.id); }
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -708,17 +692,19 @@ export default function PdfMergeFieldBuilder() {
                     HANDLES.map((h) => (
                       <Box
                         key={h}
-                        onMouseDown={(e) => startResize(e, field.id, h)}
-                        style={handleStyle(h)}
+                        onMouseDown={(e) => { e.stopPropagation(); beginResize(e.clientX, e.clientY, field.id, h); }}
+                        onTouchStart={(e) => { e.stopPropagation(); const t = e.touches[0]; if (t) beginResize(t.clientX, t.clientY, field.id, h); }}
+                        style={handleStyle(h, handlePx)}
                         sx={{
                           position: "absolute",
-                          width: HANDLE_PX,
-                          height: HANDLE_PX,
+                          width: handlePx,
+                          height: handlePx,
                           bgcolor: "primary.main",
                           border: "1px solid #fff",
                           borderRadius: "2px",
                           cursor: CURSORS[h],
                           zIndex: 1,
+                          touchAction: "none",
                         }}
                       />
                     ))}
@@ -755,7 +741,7 @@ export default function PdfMergeFieldBuilder() {
         <Paper
           variant="outlined"
           sx={{
-            width: 220,
+            width: { xs: "100%", md: 220 },
             flexShrink: 0,
             p: 1.5,
             display: "flex",
