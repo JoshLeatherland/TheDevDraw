@@ -23,6 +23,8 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
+    "cron-parser": "^4.9.0",
+    "cronstrue": "^1.125.0",
     "html-to-image": "^1.11.13",
     "jwt-decode": "^4.0.0",
     "pdf-lib": "^1.17.1",

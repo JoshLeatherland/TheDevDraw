@@ -112,6 +112,14 @@ const toolOptions: Tool[] = [
     category: "Assets",
     isNew: true,
   },
+  {
+    title: "Cron Expression Builder",
+    description:
+      "Build and validate cron expressions with a live human-readable description and next scheduled run times.",
+    path: "/tools/cron-builder",
+    category: "Dev",
+    isNew: true,
+  },
 ];
 
 export default toolOptions;

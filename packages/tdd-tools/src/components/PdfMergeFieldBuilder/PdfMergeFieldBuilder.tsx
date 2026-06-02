@@ -611,7 +611,7 @@ export default function PdfMergeFieldBuilder() {
 
   if (!pdfDoc) {
     return (
-      <Container maxWidth="lg" sx={{ pt: { xs: 10, sm: 12 }, pb: 4 }}>
+      <Container maxWidth="lg" sx={{ pt: { xs: 13, sm: 14 }, pb: 4 }}>
         {tutorialDialog}
         <Box
           onDrop={(e) => {
@@ -679,7 +679,7 @@ export default function PdfMergeFieldBuilder() {
   // -- Editor --------------------------------------------------------------------
 
   return (
-    <Container maxWidth="xl" sx={{ pt: { xs: 10, sm: 12 }, pb: 4 }}>
+    <Container maxWidth="xl" sx={{ pt: { xs: 13, sm: 14 }, pb: 4 }}>
       {tutorialDialog}
       <Box
         sx={{

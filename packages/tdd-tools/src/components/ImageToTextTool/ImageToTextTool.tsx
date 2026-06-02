@@ -251,7 +251,7 @@ export default function ImageToTextTool() {
   const hasFile = !!sourceFile;
 
   return (
-    <Container maxWidth="lg" sx={{ pt: { xs: 10, sm: 12 }, pb: 4 }}>
+    <Container maxWidth="lg" sx={{ pt: { xs: 13, sm: 14 }, pb: 4 }}>
       <Stack spacing={3} onPaste={onPaste}>
         {/* Header */}
         <Box>
