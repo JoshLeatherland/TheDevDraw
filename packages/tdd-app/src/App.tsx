@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import {
   Base64ToImageTool,
   Base64Tool,
+  CronBuilderTool,
   CSharpToTsTool,
   DiffCheckerTool,
   FaviconGeneratorTool,
@@ -121,6 +122,11 @@ function App() {
                 <Route
                   path="/tools/image-to-text"
                   element={<ImageToTextTool />}
+                />
+
+                <Route
+                  path="/tools/cron-builder"
+                  element={<CronBuilderTool />}
                 />
               </Route>
             </Routes>
