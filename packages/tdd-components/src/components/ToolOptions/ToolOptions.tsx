@@ -120,6 +120,14 @@ const toolOptions: Tool[] = [
     category: "Dev",
     isNew: true,
   },
+  {
+    title: "XML Formatter",
+    description:
+      "Format, minify and validate XML - runs entirely in your browser, no uploads required.",
+    path: "/tools/xml-formatter",
+    category: "Dev",
+    isNew: true,
+  },
 ];
 
 export default toolOptions;

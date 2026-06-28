@@ -19,3 +19,4 @@ export { default as Base64ToImageTool } from "./Base64ToImageTool";
 export { PdfMergeFieldBuilder } from "./PdfMergeFieldBuilder";
 export { ImageToTextTool } from "./ImageToTextTool";
 export { CronBuilderTool } from "./CronBuilderTool";
+export { XmlFormatterTool } from "./XmlFormatterTool";

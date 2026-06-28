@@ -7,6 +7,7 @@ import {
   Base64Tool,
   CronBuilderTool,
   CSharpToTsTool,
+  XmlFormatterTool,
   DiffCheckerTool,
   FaviconGeneratorTool,
   ImageToBase64Tool,
@@ -127,6 +128,11 @@ function App() {
                 <Route
                   path="/tools/cron-builder"
                   element={<CronBuilderTool />}
+                />
+
+                <Route
+                  path="/tools/xml-formatter"
+                  element={<XmlFormatterTool />}
                 />
               </Route>
             </Routes>
